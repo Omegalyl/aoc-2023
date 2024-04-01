@@ -110,38 +110,46 @@ fn sum_of_power_sets(games: &mut Vec<Game>) -> u64 {
 }
 
 // Daay 2 part 1
-pub fn sum_of_ids() {
+fn sum_of_ids(games: &mut Vec<Game>, game_bag: &Bag) -> u64 {
+    let mut num_total: u64 = 0;
+    for game in games {
+        if game.is_possible(game_bag) {
+            println!(
+                "Num: {}, Is Possible: {}",
+                game.num.to_owned(),
+                game.is_possible(game_bag)
+            );
+            // println!("{:#?}", game.turns);
+            num_total += game.num
+        }
+    }
+    return num_total;
+}
+
+pub fn run() {
     let file_path = Path::new("./src/day2/input.txt");
     println!("{}", file_path.display());
 
     let fp = File::open(file_path).expect("Unable to open file");
     let fp = BufReader::new(fp);
 
+    // list of all games
     let mut games: Vec<Game> = Vec::new();
+    // bag to check againts
     let game_bag = Bag {
         red_cube: 12,
         green_cube: 13,
         blue_cube: 14,
     };
 
+    // parse input file
     let mut i = 1;
     for line in fp.lines() {
         games.push(Game::new_from_string(i, line.expect("msg")));
         i = i + 1;
     }
 
-    let mut num_total: u64 = 0;
-    for game in &mut games {
-        if game.is_possible(&game_bag) {
-            println!(
-                "Num: {}, Is Possible: {}",
-                game.num.to_owned(),
-                game.is_possible(&game_bag)
-            );
-            // println!("{:#?}", game.turns);
-            num_total += game.num
-        }
-    }
+    let num_total = sum_of_ids(&mut games, &game_bag);
     println!("Total: {}", num_total);
     println!("Sum of power sets: {}", sum_of_power_sets(&mut games));
 }

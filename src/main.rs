@@ -1,5 +1,7 @@
 mod day2;
+mod day3;
 
 fn main() {
-    day2::sum_of_ids()
+    // day2::run();
+    day3::run();
 }
